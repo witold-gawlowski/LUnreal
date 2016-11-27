@@ -11,29 +11,26 @@ class LUNREAL_API ATree : public AActor
 {
   GENERATED_BODY ()
   
-  struct Rule {
-    TCHAR left;
-    FString right;
-    Rule (TCHAR l, FString r) :left (l), right (r) {}
-    FString ToString ();
-  };
- 
-  FString text_representation;
-  //todo: convert it to a map
-  TArray<Rule> rules;
+//init values
+  TMap<TCHAR, FString> rules;
   TArray<TCHAR> variables;
   TCHAR start_variable;
   float roll_angle;
+
+  FString text_representation;
  
   void Init ();
   void ReadInput ();
   void LogInputData ();
   void Clear ();
-  void StepGeneration ();
+  void StepForward ();
+  void StepBackward ();
+  void LogTextRepresentation ();
 
 public:
 	ATree();
 
+  //virtual void SetupPlayerInputComponent (class UInputComponent* InputComponent) override;
 	virtual void BeginPlay() override;
 	
   virtual void OnConstruction (const FTransform& t) override;

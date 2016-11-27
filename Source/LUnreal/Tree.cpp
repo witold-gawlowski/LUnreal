@@ -2,10 +2,8 @@
 #include "Tree.h"
 
 #define print(XXX, YYY)  UE_LOG (LogTemp, Warning, XXX, YYY);
+#define print1(XXX) UE_LOG (LogTemp, Warning, XXX);
 
-FString ATree::Rule::ToString () {
-  return FString::Printf (TEXT ("Left: %c, Right: %s"), left, *right);
-}
 void ATree::ReadInput () {
   TArray<FString> input_lines;
   FString filedir (FPaths::GameDir () + "/Input/test.txt");
@@ -24,42 +22,69 @@ void ATree::ReadInput () {
 
   for ( int i = 7; i < input_lines.Num (); i++ ) {
     input_lines[i].ParseIntoArrayWS (temp);
-    rules.Add (Rule (temp[0][0], temp[2]));
+    rules.Add (temp[0][0], temp[2]);
   }
 }
 // not tested
 void ATree::Clear () {
   rules.Empty ();
   variables.Empty ();
-  start_variable = NULL;
+  start_variable = 0;
   roll_angle = 0;
 }
+void ATree::StepForward () {
+  FString result;
+  for ( TCHAR c : text_representation ) {
+    FString *successor = rules.Find(c);
+    if ( successor ) {
+      result.Append (*successor);
+    } else {
+      result.Append (FString::Chr (c));
+    }
+  }
+  text_representation = result;
+}
+void ATree::StepBackward () {}
 void ATree::LogInputData () {
   for ( TCHAR c : variables ) {
     print (TEXT ("Variables: %c"), c)
   }
-  for ( Rule r : rules ) {
-    print (TEXT ("Rules: %s"), *r.ToString ());
+  print1 (TEXT ("Rules:"))
+  for (auto &elem : rules ) {
+    FString temp = FString::Printf(TEXT("%c -> %s"), elem.Key, *elem.Value);
+    print (TEXT("%s"), *temp);
   }
   print (TEXT ("Roll angle: %f"), roll_angle);
 }
+void ATree::LogTextRepresentation(){
+  print (TEXT ("Text represenation: %s"), *text_representation);
+}
 void ATree::Init () {
-
+  text_representation = FString::Chr(start_variable);
 }
 
 ATree::ATree()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
+//void ATree::SetupPlayerInputComponent (class UInputComponent* InputComponent) {
+//  check (InputComponent);
+//    InputComponent->BindAction("StepForward",IE_Pressed, this, &ATree::StepForward);
+//    InputComponent->BindAction ("StepBackward", IE_Pressed, this, &ATree::StepBackward);
+//}
 void ATree::BeginPlay()
 {
 	Super::BeginPlay();
+  
 }
 void ATree::OnConstruction(const FTransform &t){
   Clear ();
   ReadInput ();
   LogInputData ();
+  Init ();
+  LogTextRepresentation ();
 }
+
 void ATree::Tick( float DeltaTime ){ 
 	Super::Tick( DeltaTime );
 }
