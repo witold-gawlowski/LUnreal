@@ -61,3 +61,4 @@ Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 LUnreal.VC.db
+ipch/LUNREAL-84012421/LUNREAL-b63d1764.ipch

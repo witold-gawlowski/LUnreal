@@ -1,0 +1,9 @@
+variables:
+X F
+start:
+X
+roll angle:
+25
+rules:
+X -> F-[[X]+X]+F[+FX]-X
+F -> FF

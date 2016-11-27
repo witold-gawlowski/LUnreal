@@ -1,0 +1,71 @@
+* fractal music
+* fractal dungeon generation
+* reminding chomskys theory before to learn about automatas before
+	* maby there is some
+* Octet
+* using algorithmic bauty of plants
+
+formal requirements:
+* file feed -> program -> output
+* at least 8 different files with nice output
+* separation of your code vs octet
+* stepping through with hotkeys
+* 1200 words descritpion with images
+	* objectives
+	* data classes
+	* title page: name course name, module, title, date, illustration
+	* video (>1min)
+* report in latex
+* elegance of whole project (code)
+
+
+
+thaughts:
+* basically its very similar to the dungeons genereted in conway's way
+* research: stochasic L-system
+* research: contex sensitivity
+
+
+=============================================================================
+specification essence:
+
+* needs to be elegant, so ignore this file ;)!
+	* speed
+	* code quality
+	* quality of images
+* reproduce
+	* given picture (4)
+	* additional pictures (2)
+* octet
+* lines
+* read specs
+* display
+	* hotkeys = steps
+	* hotkeys = params inc/dec
+* 8 differenct config files
+* separation from octet code
+* description
+	* 1200 words
+	* number the pages
+	* latex
+	* objectives
+	* data classes
+	* other structures
+	* title: name, course, module, title, date, illustrations
+	* pdf
+* video
+	* 1 minute
+* bonus:
+	* 3d
+	* color/texture
+	* leaf shapes
+	* contex sensitivity
+	* stochastic l-sys
+* put result to home dir on igor.gold.ac.uk
+	* name: lsystemproject.zip
+	* README.txt
+	* upload above 2 files to assignment area for this course: IS71021A: MATHEMATICS AND GRAPHICS FOR COMPUTER
+GAMES 1.
+
+====================================
+tech: unreal engine

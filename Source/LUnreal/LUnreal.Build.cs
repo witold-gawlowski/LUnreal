@@ -2,10 +2,14 @@
 
 using UnrealBuildTool;
 
+
+
 public class LUnreal : ModuleRules
 {
 	public LUnreal(TargetInfo Target)
 	{
+MinFilesUsingPrecompiledHeaderOverride = 1;
+ bFasterWithoutUnity = true;
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
