@@ -15,6 +15,7 @@ class LUNREAL_API ABranch : public AActor
 public:
   UPROPERTY ()
   USplineComponent *SplineComponent;
+  UPROPERTY ()
   UStaticMesh *StaticMesh;
   UPROPERTY()
   USplineMeshComponent *SplineMesh;
