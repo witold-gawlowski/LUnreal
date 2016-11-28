@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Branch.h"
+#include "Classes/Components/SplineComponent.h"
 #include "GameFramework/Actor.h"
 #include "Tree.generated.h"
 
@@ -11,22 +13,8 @@ class LUNREAL_API ATree : public AActor
 {
   GENERATED_BODY ()
   
-//init values
-  TMap<TCHAR, FString> rules;
-  TArray<TCHAR> variables;
-  TCHAR start_variable;
-  float roll_angle;
-
-  FString text_representation;
- 
-  void Init ();
-  void ReadInput ();
-  void LogInputData ();
-  void Clear ();
-  void StepForward ();
-  void StepBackward ();
-  void LogTextRepresentation ();
-
+    UPROPERTY()
+  ABranch *branch;
 public:
 	ATree();
 

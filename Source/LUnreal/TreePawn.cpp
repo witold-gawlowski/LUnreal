@@ -3,6 +3,8 @@
 
 #define print(XXX, YYY)  UE_LOG (LogTemp, Warning, XXX, YYY);
 #define print1(XXX) UE_LOG (LogTemp, Warning, XXX);
+
+/*GENERATING TEXT REPRESENTATION*/
 void ATreePawn::ReadInput () {
   TArray<FString> input_lines;
   FString filedir (FPaths::GameDir () + "/Input/test.txt");
@@ -43,12 +45,12 @@ void ATreePawn::GenerateNewLevel () {
     }
   }
   text_representations.Add(result);
-  current_LOD++;
 }
 void ATreePawn::StepForward () {
   if(current_LOD >= text_representations.Num() - 1){
     GenerateNewLevel ();
   }
+  current_LOD++;
 }
 void ATreePawn::StepBackward () {
   if ( current_LOD >= 1 ) {
@@ -73,28 +75,13 @@ void ATreePawn::Init () {
   text_representations.Add (FString::Chr (start_variable));
   current_LOD = 0;
 }
-ATreePawn::ATreePawn()
-{
-	PrimaryActorTick.bCanEverTick = true;
 
+/*TREE DRAWING*/
+void ATreePawn::DrawTree () {
+  //tree.Construct (text_representations[current_LOD]);
 }
 
-void ATreePawn::BeginPlay()
-{
-	Super::BeginPlay();
-  Clear ();
-  ReadInput ();
-  //LogInputData ();
-  Init ();
-  LogTextRepresentation ();
-}
-
-void ATreePawn::Tick( float DeltaTime )
-{
-	Super::Tick( DeltaTime );
-
-}
-
+/*INPUT HANDLERS*/
 void ATreePawn::IncreaseParam () {}
 void ATreePawn::DecreaseParam () {
   LogTextRepresentation ();
@@ -110,7 +97,48 @@ void ATreePawn::ReadInput5 () {}
 void ATreePawn::ReadInput6 () {}
 void ATreePawn::ReadInput7 () {}
 void ATreePawn::ReadInput8 () {}
+void ATreePawn::MoveForward (float AxisValue) {
+  MovementInput.X = FMath::Clamp<float> (AxisValue, -1.0f, 1.0f);
+}
+void ATreePawn::MoveRight (float AxisValue) {
+  MovementInput.Y = FMath::Clamp<float> (AxisValue, -1.0f, 1.0f);
+}
+void ATreePawn::PitchCamera (float AxisValue) {
+  CameraInput.Y = AxisValue;
+}
+void ATreePawn::YawCamera (float AxisValue) {
+  CameraInput.X = AxisValue;
+}
 
+/*ACTOR API*/
+ATreePawn::ATreePawn () {
+  PrimaryActorTick.bCanEverTick = true;
+  //Create our components
+  RootComponent = CreateDefaultSubobject<USceneComponent> (TEXT ("RootComponent"));
+  OurCameraSpringArm = CreateDefaultSubobject<USpringArmComponent> (TEXT ("CameraSpringArm"));
+  OurCameraSpringArm->SetupAttachment (RootComponent);
+  OurCameraSpringArm->SetRelativeLocationAndRotation (FVector (0.0f, 0.0f, 50.0f), FRotator (-60.0f, 0.0f, 0.0f));
+  OurCameraSpringArm->TargetArmLength = 400.f;
+  OurCameraSpringArm->bEnableCameraLag = true;
+  OurCameraSpringArm->CameraLagSpeed = 3.0f;
+
+  OurCamera = CreateDefaultSubobject<UCameraComponent> (TEXT ("GameCamera"));
+  OurCamera->SetupAttachment (OurCameraSpringArm, USpringArmComponent::SocketName);
+  
+  AutoPossessPlayer = EAutoReceiveInput::Player0;
+}
+void ATreePawn::BeginPlay () {
+  Super::BeginPlay ();
+  Clear ();
+  ReadInput ();
+  //LogInputData ();
+  Init ();
+  LogTextRepresentation ();
+  tree = GetWorld ()->SpawnActor<ATree> ();
+}
+void ATreePawn::Tick (float DeltaTime) {
+  Super::Tick (DeltaTime);
+}
 void ATreePawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
 	Super::SetupPlayerInputComponent(InputComponent);

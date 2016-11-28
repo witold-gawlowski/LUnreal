@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
+#include "Tree.h"
 #include "GameFramework/Pawn.h"
 #include "TreePawn.generated.h"
 
@@ -9,6 +9,7 @@ UCLASS()
 class LUNREAL_API ATreePawn : public APawn
 {
 	GENERATED_BODY()
+   /*GENERATION*/
   TMap<TCHAR, FString> rules;
   TArray<TCHAR> variables;
   TCHAR start_variable;
@@ -16,12 +17,29 @@ class LUNREAL_API ATreePawn : public APawn
   TArray<FString> text_representations;
   int32 current_LOD;
 
+  UPROPERTY()
+  ATree *tree;
+  
+  UPROPERTY (EditAnywhere)
+  USpringArmComponent* OurCameraSpringArm;
+  UCameraComponent* OurCamera;
+
+  FVector2D MovementInput;
+  FVector2D CameraInput;
+
+  void MoveForward (float AxisValue);
+  void MoveRight (float AxisValue);
+  void PitchCamera (float AxisValue);
+  void YawCamera (float AxisValue);
+
   void Init ();
   void ReadInput ();
   void LogInputData ();
   void Clear ();
   void LogTextRepresentation ();
   void GenerateNewLevel ();
+
+  void DrawTree ();
 
   /*INPUT HANDLERS*/
   void StepForward ();
