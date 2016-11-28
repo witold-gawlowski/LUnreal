@@ -103,6 +103,9 @@ void ATreePawn::MoveForward (float AxisValue) {
 void ATreePawn::MoveRight (float AxisValue) {
   MovementInput.Y = FMath::Clamp<float> (AxisValue, -1.0f, 1.0f);
 }
+void ATreePawn::MoveUp (float AxisValue) {
+  MovementInput.Z = FMath::Clamp<float> (AxisValue, -1.0f, 1.0f);
+}
 void ATreePawn::PitchCamera (float AxisValue) {
   CameraInput.Y = AxisValue;
 }
@@ -138,6 +141,28 @@ void ATreePawn::BeginPlay () {
 }
 void ATreePawn::Tick (float DeltaTime) {
   Super::Tick (DeltaTime);
+  {
+    FRotator NewRotation = GetActorRotation ();
+    NewRotation.Yaw += CameraInput.X;
+    SetActorRotation (NewRotation);
+  }
+
+  {
+    FRotator NewRotation = OurCameraSpringArm->GetComponentRotation ();
+    NewRotation.Pitch = FMath::Clamp (NewRotation.Pitch + CameraInput.Y, -80.0f, -15.0f);
+    OurCameraSpringArm->SetWorldRotation (NewRotation);
+  }
+
+  {
+    if ( !MovementInput.IsZero () ) {
+      MovementInput = MovementInput.SafeNormal () * 400.0f;
+      FVector NewLocation = GetActorLocation ();
+      NewLocation += GetActorForwardVector () * MovementInput.X * DeltaTime;
+      NewLocation += GetActorRightVector () * MovementInput.Y * DeltaTime;
+      NewLocation += GetActorUpVector () * MovementInput.Z * DeltaTime;
+      SetActorLocation (NewLocation);
+    }
+  }
 }
 void ATreePawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
@@ -157,6 +182,12 @@ void ATreePawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
   InputComponent->BindAction ("Input6", IE_Pressed, this, &ATreePawn::ReadInput6);
   InputComponent->BindAction ("Input7", IE_Pressed, this, &ATreePawn::ReadInput7);
   InputComponent->BindAction ("Input8", IE_Pressed, this, &ATreePawn::ReadInput8);
+
+  InputComponent->BindAxis ("MoveForward", this, &ATreePawn::MoveForward);
+  InputComponent->BindAxis ("MoveRight", this, &ATreePawn::MoveRight);
+  InputComponent->BindAxis ("MoveUp", this, &ATreePawn::MoveUp);
+  InputComponent->BindAxis ("CameraPitch", this, &ATreePawn::PitchCamera);
+  InputComponent->BindAxis ("CameraYaw", this, &ATreePawn::YawCamera);
   
 }
 

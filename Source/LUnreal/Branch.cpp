@@ -16,8 +16,7 @@ ABranch::ABranch()
 void ABranch::BeginPlay()
 {
 	Super::BeginPlay();
-  SplineComponent->AddSplineLocalPoint (FVector (0, 0, 0));
-  SplineComponent->AddSplineLocalPoint (FVector (100, 100, 100));
+  //SplineComponent->AddSplineLocalPoint (FVector (0, 0, 0));
 }
 
 // Called every frame

@@ -24,11 +24,12 @@ class LUNREAL_API ATreePawn : public APawn
   USpringArmComponent* OurCameraSpringArm;
   UCameraComponent* OurCamera;
 
-  FVector2D MovementInput;
+  FVector MovementInput;
   FVector2D CameraInput;
 
   void MoveForward (float AxisValue);
   void MoveRight (float AxisValue);
+  void MoveUp (float AxisValue);
   void PitchCamera (float AxisValue);
   void YawCamera (float AxisValue);
 
