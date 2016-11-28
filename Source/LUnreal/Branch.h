@@ -1,6 +1,7 @@
 
 
 #pragma once
+#include "Classes/Components/SplineMeshComponent.h"
 #include "Classes/Components/SplineComponent.h"
 #include "GameFramework/Actor.h"
 #include "Branch.generated.h"
@@ -13,7 +14,10 @@ class LUNREAL_API ABranch : public AActor
     
 public:
   UPROPERTY ()
-  USplineComponent* SplineComponent;
+  USplineComponent *SplineComponent;
+  UStaticMesh *StaticMesh;
+  UPROPERTY()
+  USplineMeshComponent *SplineMesh;
 
 	ABranch();
 

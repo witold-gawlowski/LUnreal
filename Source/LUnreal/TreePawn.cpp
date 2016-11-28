@@ -137,7 +137,8 @@ void ATreePawn::BeginPlay () {
   //LogInputData ();
   Init ();
   LogTextRepresentation ();
-  tree = GetWorld ()->SpawnActor<ATree> ();
+  tree = GetWorld ()->SpawnActor<ATree>();
+  tree->SetActorLocation (FVector (0, 0, 100));
 }
 void ATreePawn::Tick (float DeltaTime) {
   Super::Tick (DeltaTime);
