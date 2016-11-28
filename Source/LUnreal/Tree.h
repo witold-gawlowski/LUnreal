@@ -30,7 +30,6 @@ class LUNREAL_API ATree : public AActor
 public:
 	ATree();
 
-  //virtual void SetupPlayerInputComponent (class UInputComponent* InputComponent) override;
 	virtual void BeginPlay() override;
 	
   virtual void OnConstruction (const FTransform& t) override;

@@ -67,11 +67,7 @@ ATree::ATree()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
-//void ATree::SetupPlayerInputComponent (class UInputComponent* InputComponent) {
-//  check (InputComponent);
-//    InputComponent->BindAction("StepForward",IE_Pressed, this, &ATree::StepForward);
-//    InputComponent->BindAction ("StepBackward", IE_Pressed, this, &ATree::StepBackward);
-//}
+
 void ATree::BeginPlay()
 {
 	Super::BeginPlay();
