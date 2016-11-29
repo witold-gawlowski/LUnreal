@@ -158,7 +158,7 @@ void ATreePawn::Tick (float DeltaTime) {
 
   {
     FRotator NewRotation = OurCameraSpringArm->GetComponentRotation ();
-    NewRotation.Pitch = FMath::Clamp (NewRotation.Pitch + CameraInput.Y, -80.0f, -15.0f);
+    NewRotation.Pitch = FMath::Clamp (NewRotation.Pitch + CameraInput.Y, -80.0f, 35.0f);
     OurCameraSpringArm->SetWorldRotation (NewRotation);
   }
 

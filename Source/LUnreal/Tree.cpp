@@ -20,8 +20,10 @@ void ATree::Clear () {
   turtle_pos = GetActorLocation ();
   turtle_dir = FVector (0, 0, 1);
   for ( ABranch *b : branches ) {
-    b->Destroy ();
+    if(!b->IsPendingKillOrUnreachable())
+      b->Destroy ();
   }
+  branches.Empty ();
 }
 void ATree::Init (FString s) {
   text_representation = s;
