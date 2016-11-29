@@ -24,7 +24,6 @@ void ABranch::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 
 }
-
 void ABranch::Draw () {
   SplineComponent->SetSplinePoints (points, ESplineCoordinateSpace::Local);
   for ( FVector v : points ) {
@@ -46,11 +45,17 @@ void ABranch::Draw () {
     SplineMesh->SetEndScale (FVector2D (1, 1));
     FVector pointLocationStart, pointTangentStart, pointLocationEnd, pointTangentEnd;
     SplineComponent->GetLocalLocationAndTangentAtSplinePoint (i, pointLocationStart, pointTangentStart);
+    if ( i == 0 ) {
+      pointTangentStart = initialTangent;
+    }
     SplineComponent->GetLocalLocationAndTangentAtSplinePoint (i + 1, pointLocationEnd, pointTangentEnd);
     SplineMesh->SetStartAndEnd (pointLocationStart, pointTangentStart, pointLocationEnd, pointTangentEnd, true);
+    
   }
 }
-
 void ABranch::AddPoint (FVector v) {
   points.Add (v);
+}
+void ABranch::Init (FVector tangent) {
+  initialTangent = tangent;
 }

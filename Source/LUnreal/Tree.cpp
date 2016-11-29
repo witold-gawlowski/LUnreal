@@ -17,6 +17,7 @@ void ATree::Tick( float DeltaTime ){
 }
 
 void ATree::Clear () {
+
   turtle_pos = GetActorLocation ();
   turtle_dir = FVector (0, 0, 1);
   for ( ABranch *b : branches ) {
@@ -67,6 +68,7 @@ void ATree::Forward () {
 void ATree::NewBranch () {
   ABranch *newBranch = GetWorld ()->SpawnActor<ABranch> ();
   newBranch->AddPoint (turtle_pos);
+  newBranch->Init (turtle_dir);
   branchStack.Add(newBranch);
   pos_stack.Add (turtle_pos);
   dir_stack.Add (turtle_dir);

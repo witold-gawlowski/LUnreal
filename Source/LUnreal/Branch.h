@@ -13,6 +13,7 @@ class LUNREAL_API ABranch : public AActor
   GENERATED_BODY ()
     UPROPERTY (VisibleAnywhere)
     TArray<FVector> points;
+  FVector initialTangent;
 
 public:
   UPROPERTY ()
@@ -29,4 +30,5 @@ public:
 
   void AddPoint (FVector v);
   void Draw ();
+  void Init (FVector tangent);
 };
