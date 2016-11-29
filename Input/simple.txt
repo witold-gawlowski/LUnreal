@@ -1,0 +1,8 @@
+variables:
+F
+start:
+F
+roll angle:
+25
+rules:
+F -> F+F

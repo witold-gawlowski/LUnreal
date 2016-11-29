@@ -41,4 +41,5 @@ public:
   void Init (FString s);
   void Build ();
   void Draw ();
+  void Clear ();
 };

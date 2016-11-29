@@ -33,12 +33,13 @@ void ABranch::Draw () {
     print (TEXT ("Branch point z: %f"), v.Z);
   }
   int32 branch_length = SplineComponent->GetNumberOfSplinePoints ();
-  for ( int32 i = 0; i < branch_length; i++ ) {
+  for ( int32 i = 0; i < branch_length-1; i++ ) {
     SplineMesh = NewObject<USplineMeshComponent> (this, FName (*FString::FromInt (i)));
     SplineMesh->RegisterComponentWithWorld (GetWorld ());
     SplineMesh->AttachTo (SplineComponent);
     AddOwnedComponent (SplineMesh);
     SplineMesh->SetForwardAxis (ESplineMeshAxis::Z);
+    SplineMesh->SetSplineUpDir (FVector (1, 0, 0));
     SplineMesh->SetMobility (EComponentMobility::Movable);
     SplineMesh->SetStaticMesh (StaticMesh);
     SplineMesh->SetStartScale (FVector2D (1, 1));

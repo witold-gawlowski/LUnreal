@@ -7,7 +7,7 @@
 /*GENERATING TEXT REPRESENTATION*/
 void ATreePawn::ReadInput () {
   TArray<FString> input_lines;
-  FString filedir (FPaths::GameDir () + "/Input/tree.txt");
+  FString filedir (FPaths::GameDir () + "/Input/simple.txt");
   FFileHelper::LoadANSITextFileToStrings (*filedir, NULL, input_lines);
 
 
@@ -91,7 +91,7 @@ void ATreePawn::DrawTree () {
 void ATreePawn::IncreaseParam () {}
 void ATreePawn::DecreaseParam () {
   LogTextRepresentation ();
-
+  tree->Clear ();
   tree->Build ();
 }
 void ATreePawn::EnableRollParam () {}

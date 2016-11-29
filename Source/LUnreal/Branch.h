@@ -11,7 +11,7 @@ UCLASS()
 class LUNREAL_API ABranch : public AActor
 {
   GENERATED_BODY ()
-
+    UPROPERTY (VisibleAnywhere)
     TArray<FVector> points;
 
 public:

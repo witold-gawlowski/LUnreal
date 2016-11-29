@@ -15,6 +15,14 @@ void ATree::BeginPlay(){
 void ATree::Tick( float DeltaTime ){ 
 	Super::Tick( DeltaTime );
 }
+
+void ATree::Clear () {
+  turtle_pos = GetActorLocation ();
+  turtle_dir = FVector (0, 0, 1);
+  for ( ABranch *b : branches ) {
+    b->Destroy ();
+  }
+}
 void ATree::Init (FString s) {
   text_representation = s;
   turtle_pos = GetActorLocation ();
@@ -42,6 +50,8 @@ void ATree::Build () {
       break;
     }
   }
+  CloseBranch ();
+  check (branchStack.Num()==0);
   Draw ();
 }
 void ATree::Forward () {
@@ -53,7 +63,8 @@ void ATree::Forward () {
 
 }
 void ATree::NewBranch () {
-  ABranch *newBranch = GetWorld ()->SpawnActor<ABranch> (turtle_pos, turtle_dir.Rotation ());
+
+  ABranch *newBranch = GetWorld ()->SpawnActor<ABranch> (turtle_pos, FRotator::ZeroRotator);
   newBranch->AddPoint (turtle_pos);
   branchStack.Add(newBranch);
 }
@@ -61,11 +72,9 @@ void ATree::CloseBranch () {
   branches.Add (branchStack.Pop ());
 }
 void ATree::RollCW () {
-  print1 (TEXT("assssd"));
   turtle_dir = turtle_dir.RotateAngleAxis (25, FVector (0, 1, 0));
 }
 void ATree::RollCCW () {
-  print1 (TEXT ("asssd"));
   turtle_dir = turtle_dir.RotateAngleAxis (-25, FVector (0, 1, 0));
 }
 void ATree::Draw () {
