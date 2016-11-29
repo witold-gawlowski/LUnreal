@@ -7,7 +7,7 @@
 /*GENERATING TEXT REPRESENTATION*/
 void ATreePawn::ReadInput () {
   TArray<FString> input_lines;
-  FString filedir (FPaths::GameDir () + "/Input/simple.txt");
+  FString filedir (FPaths::GameDir () + "/Input/tree.txt");
   FFileHelper::LoadANSITextFileToStrings (*filedir, NULL, input_lines);
 
 

@@ -23,6 +23,8 @@ class LUNREAL_API ATree : public AActor
   FVector turtle_dir;
   TArray<ABranch*> branches;
   TArray<ABranch*> branchStack;
+  TArray<FVector> pos_stack;
+  TArray<FVector> dir_stack;
 
   void Forward ();
   void NewBranch ();
