@@ -11,7 +11,9 @@ UCLASS()
 class LUNREAL_API ABranch : public AActor
 {
   GENERATED_BODY ()
-    
+
+    TArray<FVector> points;
+
 public:
   UPROPERTY ()
   USplineComponent *SplineComponent;
@@ -22,11 +24,11 @@ public:
 
 	ABranch();
 
-
 	virtual void BeginPlay() override;
-
 	virtual void Tick( float DeltaSeconds ) override;
 
-	
-	
+  void AddPoint (FVector v) {
+    points.Add (v);
+  }
+  void Draw ();
 };

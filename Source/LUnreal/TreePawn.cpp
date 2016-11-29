@@ -7,7 +7,7 @@
 /*GENERATING TEXT REPRESENTATION*/
 void ATreePawn::ReadInput () {
   TArray<FString> input_lines;
-  FString filedir (FPaths::GameDir () + "/Input/test.txt");
+  FString filedir (FPaths::GameDir () + "/Input/tree.txt");
   FFileHelper::LoadANSITextFileToStrings (*filedir, NULL, input_lines);
 
 
@@ -20,9 +20,13 @@ void ATreePawn::ReadInput () {
   start_variable = input_lines[3][0];
 
   roll_angle = FCString::Atof (*input_lines[5]);
-
+  
   for ( int i = 7; i < input_lines.Num (); i++ ) {
     input_lines[i].ParseIntoArrayWS (temp);
+    //print (TEXT ("Rule Line Dump: "), *input_lines[i]);
+    if ( temp.Num () == 0 ) {
+      break;
+    }
     rules.Add (temp[0][0], temp[2]);
   }
 }
@@ -51,11 +55,13 @@ void ATreePawn::StepForward () {
     GenerateNewLevel ();
   }
   current_LOD++;
+  tree->Init (text_representations[current_LOD]);
 }
 void ATreePawn::StepBackward () {
   if ( current_LOD >= 1 ) {
     current_LOD--;
   }
+  tree->Init (text_representations[current_LOD]);
 }
 void ATreePawn::LogInputData () {
   for ( TCHAR c : variables ) {
@@ -85,6 +91,8 @@ void ATreePawn::DrawTree () {
 void ATreePawn::IncreaseParam () {}
 void ATreePawn::DecreaseParam () {
   LogTextRepresentation ();
+
+  tree->Build ();
 }
 void ATreePawn::EnableRollParam () {}
 void ATreePawn::EnablePitchParam () {}
@@ -138,7 +146,7 @@ void ATreePawn::BeginPlay () {
   Init ();
   LogTextRepresentation ();
   tree = GetWorld ()->SpawnActor<ATree>();
-  tree->SetActorLocation (FVector (0, 0, 100));
+  tree->Init (text_representations[current_LOD]);
 }
 void ATreePawn::Tick (float DeltaTime) {
   Super::Tick (DeltaTime);
