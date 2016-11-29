@@ -42,10 +42,15 @@ void ATree::Build () {
       break;
     }
   }
+  Draw ();
 }
 void ATree::Forward () {
   turtle_pos += turtle_dir * 100;
   branchStack.Top ()->AddPoint (turtle_pos);
+  /*print (TEXT("New turtle_pos x: %f"), turtle_pos.X);
+  print (TEXT("New turtle_pos y: %f"), turtle_pos.Y);
+  print (TEXT("New turtle_pos z: %f"), turtle_pos.Z);*/
+
 }
 void ATree::NewBranch () {
   ABranch *newBranch = GetWorld ()->SpawnActor<ABranch> (turtle_pos, turtle_dir.Rotation ());
@@ -56,10 +61,12 @@ void ATree::CloseBranch () {
   branches.Add (branchStack.Pop ());
 }
 void ATree::RollCW () {
-  turtle_dir.RotateAngleAxis (25, FVector (1, 0, 0));
+  print1 (TEXT("assssd"));
+  turtle_dir = turtle_dir.RotateAngleAxis (25, FVector (0, 1, 0));
 }
 void ATree::RollCCW () {
-  turtle_dir.RotateAngleAxis (-25, FVector (1, 0, 0));
+  print1 (TEXT ("asssd"));
+  turtle_dir = turtle_dir.RotateAngleAxis (-25, FVector (0, 1, 0));
 }
 void ATree::Draw () {
   for ( ABranch* bp : branches ) {

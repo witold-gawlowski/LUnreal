@@ -1,12 +1,15 @@
 #include "LUnreal.h"
 #include "Branch.h"
 
+#define print(XXX, YYY)  UE_LOG (LogTemp, Warning, XXX, YYY);
+#define print1(XXX) UE_LOG (LogTemp, Warning, XXX);
+
 ABranch::ABranch()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
   SplineComponent = CreateDefaultSubobject<USplineComponent> (TEXT ("BranchSpline"));
   RootComponent = SplineComponent;
+  SplineComponent->SetMobility (EComponentMobility::Static);
 
   static ConstructorHelpers::FObjectFinder<UStaticMesh> BarFillObj (TEXT ("/Game/Cylinder_StaticMesh2"));
   StaticMesh = BarFillObj.Object;
@@ -23,10 +26,12 @@ void ABranch::Tick( float DeltaTime )
 }
 
 void ABranch::Draw () {
-  UStaticMeshComponent *m = NewObject<UStaticMeshComponent> (this, TEXT ("asd"));
-  m->SetStaticMesh (StaticMesh);
-
   SplineComponent->SetSplinePoints (points, ESplineCoordinateSpace::Local);
+  for ( FVector v : points ) {
+    print (TEXT ("Branch point x: %f"), v.X);
+    print (TEXT ("Branch point y: %f"), v.Y);
+    print (TEXT ("Branch point z: %f"), v.Z);
+  }
   int32 branch_length = SplineComponent->GetNumberOfSplinePoints ();
   for ( int32 i = 0; i < branch_length; i++ ) {
     SplineMesh = NewObject<USplineMeshComponent> (this, FName (*FString::FromInt (i)));
@@ -34,6 +39,7 @@ void ABranch::Draw () {
     SplineMesh->AttachTo (SplineComponent);
     AddOwnedComponent (SplineMesh);
     SplineMesh->SetForwardAxis (ESplineMeshAxis::Z);
+    SplineMesh->SetMobility (EComponentMobility::Movable);
     SplineMesh->SetStaticMesh (StaticMesh);
     SplineMesh->SetStartScale (FVector2D (1, 1));
     SplineMesh->SetEndScale (FVector2D (1, 1));
@@ -42,4 +48,8 @@ void ABranch::Draw () {
     SplineComponent->GetLocalLocationAndTangentAtSplinePoint (i + 1, pointLocationEnd, pointTangentEnd);
     SplineMesh->SetStartAndEnd (pointLocationStart, pointTangentStart, pointLocationEnd, pointTangentEnd, true);
   }
+}
+
+void ABranch::AddPoint (FVector v) {
+  points.Add (v);
 }

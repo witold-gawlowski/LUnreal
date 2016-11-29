@@ -27,8 +27,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;
 
-  void AddPoint (FVector v) {
-    points.Add (v);
-  }
+  void AddPoint (FVector v);
   void Draw ();
 };
