@@ -7,7 +7,7 @@
 /*GENERATING TEXT REPRESENTATION*/
 void ATreePawn::ReadInput () {
   TArray<FString> input_lines;
-  FString filedir (FPaths::GameDir () + "/Input/tree.txt");
+  FString filedir (FPaths::GameDir () + "/Input/3d.txt");
   FFileHelper::LoadANSITextFileToStrings (*filedir, NULL, input_lines);
 
 
@@ -55,13 +55,17 @@ void ATreePawn::StepForward () {
     GenerateNewLevel ();
   }
   current_LOD++;
-  tree->Init (text_representations[current_LOD]);
+  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier);
+  tree->Clear ();
+  tree->Build ();
 }
 void ATreePawn::StepBackward () {
   if ( current_LOD >= 1 ) {
     current_LOD--;
   }
-  tree->Init (text_representations[current_LOD]);
+  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier);
+  tree->Clear ();
+  tree->Build ();
 }
 void ATreePawn::LogInputData () {
   for ( TCHAR c : variables ) {
@@ -80,6 +84,8 @@ void ATreePawn::LogTextRepresentation () {
 void ATreePawn::Init () {
   text_representations.Add (FString::Chr (start_variable));
   current_LOD = 0;
+  length_multiplier = 0.9;
+  width_multiplier = 0.9;
 }
 
 /*TREE DRAWING*/
@@ -88,15 +94,65 @@ void ATreePawn::DrawTree () {
 }
 
 /*INPUT HANDLERS*/
-void ATreePawn::IncreaseParam () {}
-void ATreePawn::DecreaseParam () {
-  LogTextRepresentation ();
+void ATreePawn::IncreaseParam (float AxisValue) {
+  if ( AxisValue == 0 ) {
+    return;
+  }
+  switch ( currentParameter ) {
+  case length:
+    length_multiplier += AxisValue/100;
+    if ( GEngine )
+      GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("length multiplier: %f"), length_multiplier));
+    break;
+  case pitch:
+    pitch_angle += AxisValue;
+    if ( GEngine )
+      GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("pitch angle: %f"), pitch_angle));
+    break;
+  case roll:
+    roll_angle += AxisValue;
+    if ( GEngine )
+      GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("roll angle: %f"), roll_angle));
+    break;
+  case width:
+    width_multiplier += AxisValue/100;
+    if ( GEngine )
+      GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("width multiplier: %f"), width_multiplier));
+    break;
+  }
+  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier);
+  tree->Clear ();
+  tree->Build ();
+ 
+}
+void ATreePawn::EnableRollParam () {
+  currentParameter = roll;
+  if ( GEngine )
+    GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("roll angle: %f"), roll_angle));
   tree->Clear ();
   tree->Build ();
 }
-void ATreePawn::EnableRollParam () {}
-void ATreePawn::EnablePitchParam () {}
-void ATreePawn::EnableSizeMultiplier () {}
+void ATreePawn::EnablePitchParam () {
+  currentParameter = pitch;
+  if ( GEngine )
+    GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("pitch angle: %f"), pitch_angle));
+  tree->Clear ();
+  tree->Build ();
+}
+void ATreePawn::EnableWidthMultiplier () {
+  currentParameter = width;
+  if ( GEngine )
+    GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("width multiplier: %f"), width_multiplier));
+  tree->Clear ();
+  tree->Build ();
+}
+void ATreePawn::EnableLengthMultiplier () {
+  currentParameter = length;
+  if ( GEngine )
+    GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("length multiplier: %f"), length_multiplier));
+  tree->Clear ();
+  tree->Build ();
+}
 void ATreePawn::ReadInput1 () {}
 void ATreePawn::ReadInput2 () {}
 void ATreePawn::ReadInput3 () {}
@@ -129,7 +185,7 @@ ATreePawn::ATreePawn () {
   OurCameraSpringArm = CreateDefaultSubobject<USpringArmComponent> (TEXT ("CameraSpringArm"));
   OurCameraSpringArm->SetupAttachment (RootComponent);
   OurCameraSpringArm->SetRelativeLocationAndRotation (FVector (0.0f, 0.0f, 50.0f), FRotator (-60.0f, 0.0f, 0.0f));
-  OurCameraSpringArm->TargetArmLength = 400.f;
+  OurCameraSpringArm->TargetArmLength = 100.f;
   OurCameraSpringArm->bEnableCameraLag = true;
   OurCameraSpringArm->CameraLagSpeed = 3.0f;
 
@@ -146,8 +202,9 @@ void ATreePawn::BeginPlay () {
   Init ();
   LogTextRepresentation ();
   tree = GetWorld ()->SpawnActor<ATree>();
-  tree->Init (text_representations[current_LOD]);
+  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier);
 }
+
 void ATreePawn::Tick (float DeltaTime) {
   Super::Tick (DeltaTime);
   {
@@ -178,11 +235,10 @@ void ATreePawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 	Super::SetupPlayerInputComponent(InputComponent);
   InputComponent->BindAction ("StepForward", IE_Pressed, this, &ATreePawn::StepForward);
   InputComponent->BindAction ("StepBackward", IE_Pressed, this, &ATreePawn::StepBackward);
-  InputComponent->BindAction ("Increase", IE_Pressed, this, &ATreePawn::IncreaseParam);
-  InputComponent->BindAction ("Decrease", IE_Pressed, this, &ATreePawn::DecreaseParam);
   InputComponent->BindAction ("RollAngParam", IE_Pressed, this, &ATreePawn::EnableRollParam);
   InputComponent->BindAction ("PitchAngParam", IE_Pressed, this, &ATreePawn::EnablePitchParam);
-  InputComponent->BindAction ("SizeMultiplier", IE_Pressed, this, &ATreePawn::EnableSizeMultiplier);
+  InputComponent->BindAction ("WidthMultiplier", IE_Pressed, this, &ATreePawn::EnableWidthMultiplier);
+  InputComponent->BindAction ("LengthMultiplier", IE_Pressed, this, &ATreePawn::EnableLengthMultiplier);
   InputComponent->BindAction ("Input1", IE_Pressed, this, &ATreePawn::ReadInput1);
   InputComponent->BindAction ("Input2", IE_Pressed, this, &ATreePawn::ReadInput2);
   InputComponent->BindAction ("Input3", IE_Pressed, this, &ATreePawn::ReadInput3);
@@ -197,6 +253,8 @@ void ATreePawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
   InputComponent->BindAxis ("MoveUp", this, &ATreePawn::MoveUp);
   InputComponent->BindAxis ("CameraPitch", this, &ATreePawn::PitchCamera);
   InputComponent->BindAxis ("CameraYaw", this, &ATreePawn::YawCamera);
+
+  InputComponent->BindAxis ("Increase", this, &ATreePawn::IncreaseParam);
   
 }
 

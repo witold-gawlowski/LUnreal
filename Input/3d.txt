@@ -5,5 +5,5 @@ X
 roll angle:
 5
 rules:
-X -> F-[[X]+X]+F[+FX]-X
+X -> F-[&[X]+X]+F[^+FX]-X
 F -> FF

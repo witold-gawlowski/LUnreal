@@ -11,7 +11,7 @@ ABranch::ABranch()
   RootComponent = SplineComponent;
   SplineComponent->SetMobility (EComponentMobility::Static);
 
-  static ConstructorHelpers::FObjectFinder<UStaticMesh> BarFillObj (TEXT ("/Game/Cylinder_StaticMesh2"));
+  static ConstructorHelpers::FObjectFinder<UStaticMesh> BarFillObj (TEXT ("/Game/Cylinder_StaticMesh3"));
   StaticMesh = BarFillObj.Object;
 }
 void ABranch::BeginPlay()
@@ -38,7 +38,7 @@ void ABranch::Draw () {
     SplineMesh->AttachTo (SplineComponent);
     AddOwnedComponent (SplineMesh);
     SplineMesh->SetForwardAxis (ESplineMeshAxis::Z);
-    SplineMesh->SetSplineUpDir (FVector (1, 0, 0));
+    SplineMesh->SetSplineUpDir (FVector (0, 1, 0));;
     SplineMesh->SetMobility (EComponentMobility::Movable);
     SplineMesh->SetStaticMesh (StaticMesh);
     SplineMesh->SetStartScale (FVector2D (1, 1));
@@ -48,14 +48,20 @@ void ABranch::Draw () {
     if ( i == 0 ) {
       pointTangentStart = initialTangent;
     }
+    FVector tangent = pointLocationEnd - pointLocationStart;
+    FVector perpendicular = FVector::CrossProduct (tangent, FVector (1, 0, 0));
+    //SplineMesh->SetSplineUpDir (perpendicular);
+    SplineMesh->SetEndScale (FVector2D (initialScale*pow (width_multiplier, i + 1), initialScale*pow (width_multiplier, i + 1)));
+    SplineMesh->SetStartScale (FVector2D (initialScale*pow (width_multiplier, i), initialScale*pow (width_multiplier, i)));
     SplineComponent->GetLocalLocationAndTangentAtSplinePoint (i + 1, pointLocationEnd, pointTangentEnd);
     SplineMesh->SetStartAndEnd (pointLocationStart, pointTangentStart, pointLocationEnd, pointTangentEnd, true);
-    
   }
 }
 void ABranch::AddPoint (FVector v) {
   points.Add (v);
 }
-void ABranch::Init (FVector tangent) {
+void ABranch::Init (FVector tangent, float scale, float w) {
   initialTangent = tangent;
+  initialScale = scale;
+  width_multiplier = w;
 }

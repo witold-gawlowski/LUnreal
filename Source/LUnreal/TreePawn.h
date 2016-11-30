@@ -13,9 +13,16 @@ class LUNREAL_API ATreePawn : public APawn
   TMap<TCHAR, FString> rules;
   TArray<TCHAR> variables;
   TCHAR start_variable;
-  float roll_angle;
   TArray<FString> text_representations;
   int32 current_LOD;
+
+  /*PARAMETERS*/
+  float roll_angle;
+  float pitch_angle;
+  float width_multiplier;
+  float length_multiplier;
+  enum ParameterType{roll, pitch, width, length};
+  ParameterType currentParameter;
 
   UPROPERTY()
   ATree *tree;
@@ -45,11 +52,11 @@ class LUNREAL_API ATreePawn : public APawn
   /*INPUT HANDLERS*/
   void StepForward ();
   void StepBackward ();
-  void IncreaseParam ();
-  void DecreaseParam ();
+  void IncreaseParam (float AxisValue);
   void EnableRollParam ();
   void EnablePitchParam ();
-  void EnableSizeMultiplier ();
+  void EnableWidthMultiplier ();
+  void EnableLengthMultiplier ();
   void ReadInput1 ();
   void ReadInput2 ();
   void ReadInput3 ();

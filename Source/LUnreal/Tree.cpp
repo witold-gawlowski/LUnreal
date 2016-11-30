@@ -26,10 +26,16 @@ void ATree::Clear () {
   }
   branches.Empty ();
 }
-void ATree::Init (FString s) {
+void ATree::Init (FString s, float r, float p, float l, float w) {
   text_representation = s;
   turtle_pos = GetActorLocation ();
   turtle_dir = FVector (0, 0, 1);
+  turtle_width_scale = 1;
+  turtle_length_scale = 1;
+  roll_angle = r;
+  pitch_angle = p;
+  length_multiplier = l;
+  width_multiplier = w;
 }
 void ATree::Build () {
   NewBranch ();
@@ -41,6 +47,12 @@ void ATree::Build () {
       break;
     case '[':
       NewBranch ();
+      break;
+    case '&':
+      PitchCW ();
+      break;
+    case '^':
+      PitchCCW ();
       break;
     case ']':
       CloseBranch ();
@@ -58,8 +70,10 @@ void ATree::Build () {
   Draw ();
 }
 void ATree::Forward () {
-  turtle_pos += turtle_dir * 100;
+  turtle_pos += turtle_dir * 100*turtle_length_scale;
   branchStack.Top ()->AddPoint (turtle_pos);
+  turtle_length_scale *= length_multiplier;
+  turtle_width_scale *= width_multiplier;
   /*print (TEXT("New turtle_pos x: %f"), turtle_pos.X);
   print (TEXT("New turtle_pos y: %f"), turtle_pos.Y);
   print (TEXT("New turtle_pos z: %f"), turtle_pos.Z);*/
@@ -68,21 +82,31 @@ void ATree::Forward () {
 void ATree::NewBranch () {
   ABranch *newBranch = GetWorld ()->SpawnActor<ABranch> ();
   newBranch->AddPoint (turtle_pos);
-  newBranch->Init (turtle_dir);
+  newBranch->Init (turtle_dir, turtle_width_scale, width_multiplier);
   branchStack.Add(newBranch);
   pos_stack.Add (turtle_pos);
   dir_stack.Add (turtle_dir);
+  length_stack.Add (turtle_length_scale);
+  width_stack.Add (turtle_width_scale);
 }
 void ATree::CloseBranch () {
   branches.Add (branchStack.Pop ());
   turtle_pos = pos_stack.Pop ();
   turtle_dir = dir_stack.Pop ();
+  turtle_length_scale = length_stack.Pop ();
+  turtle_width_scale = width_stack.Pop ();
 }
 void ATree::RollCW () {
-  turtle_dir = turtle_dir.RotateAngleAxis (25, FVector (0, 1, 0));
+  turtle_dir = turtle_dir.RotateAngleAxis (roll_angle, FVector (0, 1, 0));
 }
 void ATree::RollCCW () {
-  turtle_dir = turtle_dir.RotateAngleAxis (-25, FVector (0, 1, 0));
+  turtle_dir = turtle_dir.RotateAngleAxis (-roll_angle, FVector (0, 1, 0));
+}
+void ATree::PitchCW () {
+  turtle_dir = turtle_dir.RotateAngleAxis (pitch_angle, FVector (1, 0, 0));
+}
+void ATree::PitchCCW () {
+  turtle_dir = turtle_dir.RotateAngleAxis (-pitch_angle, FVector (1, 0, 0));
 }
 void ATree::Draw () {
   for ( ABranch* bp : branches ) {
