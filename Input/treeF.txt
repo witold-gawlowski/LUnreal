@@ -1,9 +1,9 @@
 variables:
-A B
+F X
 start:
-A
+X
 roll angle:
 25
 rules:
-A -> AB
-B -> A
+F -> FF
+X -> F-[[X]+X]+F[+FX]-X

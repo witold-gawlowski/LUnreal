@@ -3,7 +3,7 @@ X F
 start:
 X
 roll angle:
-5
+25
 rules:
-X -> F-[[X]+X]+F[+FX]-X
 F -> FF
+X -> F[++X][+X][-X][--X]F&X^

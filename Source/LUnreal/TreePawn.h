@@ -9,12 +9,13 @@ UCLASS()
 class LUNREAL_API ATreePawn : public APawn
 {
 	GENERATED_BODY()
+
    /*GENERATION*/
   TMap<TCHAR, FString> rules;
   TArray<TCHAR> variables;
   TCHAR start_variable;
   TArray<FString> text_representations;
-  int32 current_LOD;
+  
 
   /*PARAMETERS*/
   float roll_angle;
@@ -23,6 +24,7 @@ class LUNREAL_API ATreePawn : public APawn
   float length_multiplier;
   enum ParameterType{roll, pitch, width, length};
   ParameterType currentParameter;
+  int32 current_LOD;
 
   UPROPERTY()
   ATree *tree;
@@ -41,7 +43,8 @@ class LUNREAL_API ATreePawn : public APawn
   void YawCamera (float AxisValue);
 
   void Init ();
-  void ReadInput ();
+  void Build ();
+  void ReadInput (FString path);
   void LogInputData ();
   void Clear ();
   void LogTextRepresentation ();
@@ -57,6 +60,7 @@ class LUNREAL_API ATreePawn : public APawn
   void EnablePitchParam ();
   void EnableWidthMultiplier ();
   void EnableLengthMultiplier ();
+  void ReadInputGeneric (FString f);
   void ReadInput1 ();
   void ReadInput2 ();
   void ReadInput3 ();
@@ -66,6 +70,7 @@ class LUNREAL_API ATreePawn : public APawn
   void ReadInput7 ();
   void ReadInput8 ();
 public:
+  
 	// Sets default values for this pawn's properties
 	ATreePawn();
 

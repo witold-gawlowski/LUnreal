@@ -1,0 +1,9 @@
+variables:
+F G
+start:
+F
+roll angle:
+25
+rules:
+F -> [-&>G][>++&G]F[--&<G][+&G]FF-[-F+F+F]-[^>F-F-F&<]
+G -> F[+G][-G]F[+G][-G]FG

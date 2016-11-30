@@ -5,9 +5,9 @@
 #define print1(XXX) UE_LOG (LogTemp, Warning, XXX);
 
 /*GENERATING TEXT REPRESENTATION*/
-void ATreePawn::ReadInput () {
+void ATreePawn::ReadInput (FString path) {
   TArray<FString> input_lines;
-  FString filedir (FPaths::GameDir () + "/Input/3d.txt");
+  FString filedir (FPaths::GameDir () + path);
   FFileHelper::LoadANSITextFileToStrings (*filedir, NULL, input_lines);
 
 
@@ -50,22 +50,23 @@ void ATreePawn::GenerateNewLevel () {
   }
   text_representations.Add(result);
 }
+void ATreePawn::Build () {
+  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier, current_LOD);
+  tree->Clear ();
+  tree->Build ();
+}
 void ATreePawn::StepForward () {
   if(current_LOD >= text_representations.Num() - 1){
     GenerateNewLevel ();
   }
   current_LOD++;
-  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier);
-  tree->Clear ();
-  tree->Build ();
+  Build ();
 }
 void ATreePawn::StepBackward () {
   if ( current_LOD >= 1 ) {
     current_LOD--;
   }
-  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier);
-  tree->Clear ();
-  tree->Build ();
+  Build ();
 }
 void ATreePawn::LogInputData () {
   for ( TCHAR c : variables ) {
@@ -120,10 +121,7 @@ void ATreePawn::IncreaseParam (float AxisValue) {
       GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (TEXT ("width multiplier: %f"), width_multiplier));
     break;
   }
-  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier);
-  tree->Clear ();
-  tree->Build ();
- 
+  Build ();
 }
 void ATreePawn::EnableRollParam () {
   currentParameter = roll;
@@ -153,14 +151,23 @@ void ATreePawn::EnableLengthMultiplier () {
   tree->Clear ();
   tree->Build ();
 }
-void ATreePawn::ReadInput1 () {}
-void ATreePawn::ReadInput2 () {}
-void ATreePawn::ReadInput3 () {}
-void ATreePawn::ReadInput4 () {}
-void ATreePawn::ReadInput5 () {}
-void ATreePawn::ReadInput6 () {}
-void ATreePawn::ReadInput7 () {}
-void ATreePawn::ReadInput8 () {}
+void ATreePawn::ReadInputGeneric (FString f) {
+  Clear ();
+  ReadInput (f);
+  Init ();
+  if ( GEngine )
+    GEngine->AddOnScreenDebugMessage (-1, 5.0f, FColor::Yellow, FString::Printf (*f));
+  Build ();
+}
+void ATreePawn::ReadInput1 () {ReadInputGeneric (FString (TEXT ("/Input/treeA.txt")));}
+void ATreePawn::ReadInput2 () { ReadInputGeneric (FString (TEXT ("/Input/treeB.txt"))); }
+void ATreePawn::ReadInput3 () { ReadInputGeneric (FString (TEXT ("/Input/treeC.txt"))); }
+void ATreePawn::ReadInput4 () { ReadInputGeneric (FString (TEXT ("/Input/treeD.txt"))); }
+void ATreePawn::ReadInput5 () { ReadInputGeneric (FString (TEXT ("/Input/treeE.txt"))); }
+void ATreePawn::ReadInput6 () { ReadInputGeneric (FString (TEXT ("/Input/treeF.txt"))); }
+void ATreePawn::ReadInput7 () { ReadInputGeneric (FString (TEXT ("/Input/treeG.txt"))); }
+void ATreePawn::ReadInput8 () { ReadInputGeneric (FString (TEXT ("/Input/treeH.txt"))); }
+
 void ATreePawn::MoveForward (float AxisValue) {
   MovementInput.X = FMath::Clamp<float> (AxisValue, -1.0f, 1.0f);
 }
@@ -196,13 +203,8 @@ ATreePawn::ATreePawn () {
 }
 void ATreePawn::BeginPlay () {
   Super::BeginPlay ();
-  Clear ();
-  ReadInput ();
-  //LogInputData ();
-  Init ();
-  LogTextRepresentation ();
-  tree = GetWorld ()->SpawnActor<ATree>();
-  tree->Init (text_representations[current_LOD], roll_angle, pitch_angle, length_multiplier, width_multiplier);
+  tree = GetWorld ()->SpawnActor<ATree> ();
+  ReadInputGeneric (FString (TEXT ("/Input/treeA.txt")));
 }
 
 void ATreePawn::Tick (float DeltaTime) {
@@ -257,4 +259,5 @@ void ATreePawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
   InputComponent->BindAxis ("Increase", this, &ATreePawn::IncreaseParam);
   
 }
+
 

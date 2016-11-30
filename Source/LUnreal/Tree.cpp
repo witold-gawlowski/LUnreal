@@ -26,8 +26,9 @@ void ATree::Clear () {
   }
   branches.Empty ();
 }
-void ATree::Init (FString s, float r, float p, float l, float w) {
+void ATree::Init (FString s, float r, float p, float l, float w, int ld) {
   text_representation = s;
+  tree_height = 0;
   turtle_pos = GetActorLocation ();
   turtle_dir = FVector (0, 0, 1);
   turtle_width_scale = 1;
@@ -36,6 +37,7 @@ void ATree::Init (FString s, float r, float p, float l, float w) {
   pitch_angle = p;
   length_multiplier = l;
   width_multiplier = w;
+  lod = ld;
 }
 void ATree::Build () {
   NewBranch ();
@@ -70,10 +72,11 @@ void ATree::Build () {
   Draw ();
 }
 void ATree::Forward () {
-  turtle_pos += turtle_dir * 100*turtle_length_scale;
+  turtle_pos += turtle_dir *turtle_length_scale * 30/(pow(turtle_pos.Z/ (100*length_multiplier) +1, 1.1));
   branchStack.Top ()->AddPoint (turtle_pos);
   turtle_length_scale *= length_multiplier;
   turtle_width_scale *= width_multiplier;
+  tree_height = FMath::Max (tree_height, turtle_pos.Z);
   /*print (TEXT("New turtle_pos x: %f"), turtle_pos.X);
   print (TEXT("New turtle_pos y: %f"), turtle_pos.Y);
   print (TEXT("New turtle_pos z: %f"), turtle_pos.Z);*/
