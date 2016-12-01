@@ -6,4 +6,4 @@ roll angle:
 25
 rules:
 F -> FF
-X -> F-[[X]+X]+F[+FX]-X
+X -> F-[[&X^]+^X&]+F[+F^X&]-X

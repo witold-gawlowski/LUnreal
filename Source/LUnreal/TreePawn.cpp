@@ -85,7 +85,7 @@ void ATreePawn::LogTextRepresentation () {
 void ATreePawn::Init () {
   text_representations.Add (FString::Chr (start_variable));
   current_LOD = 0;
-  length_multiplier = 0.9;
+  length_multiplier = 1.1;
   width_multiplier = 0.9;
 }
 
@@ -203,6 +203,7 @@ ATreePawn::ATreePawn () {
 }
 void ATreePawn::BeginPlay () {
   Super::BeginPlay ();
+  
   tree = GetWorld ()->SpawnActor<ATree> ();
   ReadInputGeneric (FString (TEXT ("/Input/treeA.txt")));
 }

@@ -72,7 +72,7 @@ void ATree::Build () {
   Draw ();
 }
 void ATree::Forward () {
-  turtle_pos += turtle_dir *turtle_length_scale * 30/(pow(turtle_pos.Z/ (100*length_multiplier) +1, 1.1));
+  turtle_pos += turtle_dir *turtle_length_scale * 70;
   branchStack.Top ()->AddPoint (turtle_pos);
   turtle_length_scale *= length_multiplier;
   turtle_width_scale *= width_multiplier;

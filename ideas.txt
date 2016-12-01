@@ -69,3 +69,6 @@ GAMES 1.
 
 ====================================
 tech: unreal engine
+
+opisa pozmieniane formuly, jak do nich dochodzilem
+opisac wzor ktory mam na dlugosc kroku
